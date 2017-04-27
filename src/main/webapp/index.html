@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+<!-- 
+https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js
+https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js
+-->
+</head>
+<body ng-app="myApp">
+
+<div ng-controller="myCtrl">
+<p>{{errorMsg}}</p>
+<button ng-click=statusTest()>API Status</button> <p>{{statusTestMsg}}</p>
+<input type="text" ng-model="regd" name="regd" placeholder="Registration No."/> <p>{{counter}}</p>
+<button ng-click=regdCount() >Get Count</button>
+</div>
+<script>
+var app = angular.module("myApp", []);
+app.controller("myCtrl", function($scope, $http) {
+    $scope.statusTest = function() {
+		console.log("API Testing, URL:" + "http://localhost:8088/HarshaTrust/api/test/status/");
+		//$http.get("https://harsha-guptas.rhcloud.com/api/test/status/").
+		$http({
+			method: 'GET',
+			url: 'http://localhost:8088/HarshaTrust/api/test/status'
+			//url: 'https://localhost:8088/HarshLocal/api/test/status'
+		}).
+			then(function mySucces(response) {
+				var sMsg = response.data;
+				$scope.statusTestMsg = sMsg;
+			},
+			function myError(response) {
+				$scope.errorMsg = "Connection Problem";
+			});
+			/*
+			then(function(response) {
+				$scope.statusTestMsg = response.data;
+			},
+			function(response) {
+				$scope.errorMsg = "Connection Problem";
+			});
+			*/
+	}
+	$scope.regdCount = function() {
+		var regdNo = $scope.regd;
+		console.log("Registration:" + regdNo + ", URL:" + "http://localhost:8088/HarshaTrust/api/test/developer?regd=" + regdNo);
+		$http.get("http://localhost:8088/HarshaTrust/api/test/developer?regd=" + regdNo).
+		/*$http({
+			method: 'GET',
+			url: 'https://harsha-guptas.rhcloud.com/api/test/developer',
+			//url: 'https://localhost:8088/HarshLocal/api/test/developer',
+			data: "regd="+regdNo
+		}).*/
+			then(function mySucces(response) {
+				var returnData = response.data;
+				$scope.data = returnData[0];
+				console.log("Counter:" + $scope.data.counter);
+				$scope.counter = $scope.data.counter;
+			},
+			function myError(response) {
+				$scope.errorMsg = "Connection Problem";
+			});
+	}
+});
+
+/*
+$http({
+    method: 'POST',
+    url: 'request-url',
+    data: "message=" + message,
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+}).
+then
+*/
+</script>
+<a href="index2.jsp">Index2</a>
+</body>
+</html>
